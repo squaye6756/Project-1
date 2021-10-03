@@ -28,7 +28,7 @@ const validCharArr = [
 
 const noInfo = ['Kazuya','Byleth','Alex','Steve'];
 //byleth,steve/alex, and kazuya not in list
-console.log(validCharArr.length);
+// console.log(validCharArr.length);
 
 const stripSymbols = (word) => {
     while (word.includes(".")) {
@@ -42,27 +42,53 @@ const stripSymbols = (word) => {
     return word;
 }
 
+const calcFirstActiveFrame = (activeFrameStr) => {
+    console.log(activeFrameStr);
+    if (activeFrameStr == null) {
+        return "N/A";
+    }
+    if (activeFrameStr.includes("-")) {
+        return activeFrameStr.split("-")[0];
+    }
+    return activeFrameStr;
+}
+
 
 $( () => {
     $("form").on("submit", (event) => {
         event.preventDefault();
 
         console.log($("#character").val());
-        console.log($("#init-active-frame").val());
-        console.log($("#total-active-frames").val());
-        console.log($("#endlag").val());
+        // console.log($("#init-active-frame").val());
+        // console.log($("#total-active-frames").val());
+        // console.log($("#endlag").val());
         const charSelected = $("#character").val();
         const initActiveFrameDesired = $("#init-active-frame").val();
         const totalActiveFramesDesired = $("#total-active-frames").val();
         const endlagDesired = $("#endlag").val();
 
         let char = charSelected.split(" ").join("");
-        console.log(char);
+        // console.log(char);
         char = stripSymbols(char);
-        console.log(char);
+        // console.log(char);
 
-        let ajaxLink = `https://api.kuroganehammer.com/api/characters/name/${char}/moves?game=ultimate`
-        let ajaxLinkTwo = `https://api.kuroganehammer.com/api/characters/${char}/moves?expand=false?game=ultimate`
+        // let ajaxLink = `https://api.kuroganehammer.com/api/characters/name/${char}/moves?game=ultimate`;
+        let ajaxLinkTwo = `https://api.kuroganehammer.com/api/characters/name/${char}/moves?expand=false?game=ultimate`;
+
+        $.ajax({
+            url: ajaxLinkTwo
+        }).then(
+            (data) => {
+                for (const dataPoint of data) {
+                    console.log(dataPoint);
+                    const firstActiveFrame = calcFirstActiveFrame(dataPoint.HitboxActive);
+                    console.log("FirstActiveFrame", firstActiveFrame);
+                }
+            },
+            () => {
+                console.log('bad request');
+            }
+        )
 
         $(event.currentTarget).trigger("reset");
     })
