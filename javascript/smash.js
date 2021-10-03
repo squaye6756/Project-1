@@ -88,9 +88,16 @@ $( () => {
         // console.log($("#total-active-frames").val());
         // console.log($("#endlag").val());
         const charSelected = $("#character").val();
-        const initActiveFrameDesired = $("#init-active-frame").val();
-        const totalActiveFramesDesired = $("#total-active-frames").val();
-        const endlagDesired = $("#endlag").val();
+        let initActiveFrameDesired = $("#init-active-frame").val();
+        let totalActiveFramesDesired = $("#total-active-frames").val();
+        let endlagDesired = $("#endlag").val();
+
+        initActiveFrameDesired = initActiveFrameDesired == null ?
+            10000 : parseInt(initActiveFrameDesired);
+        totalActiveFramesDesired = totalActiveFramesDesired == null ?
+            0 : parseInt(totalActiveFramesDesired);
+        endlagDesired = endlagDesired == null ?
+            10000 : parseInt(endlagDesired);
 
         let char = charSelected.split(" ").join("");
         // console.log(char);
@@ -114,13 +121,17 @@ $( () => {
                     console.log("EndLag:", endlag);
 
                     if (firstActiveFrame <= initActiveFrameDesired) {
-                        const desiredMove = {
-                            name: dataPoint.Name,
-                            initActFrame: firstActiveFrame,
-                            totalActFrames: totalActiveFrames,
-                            endingLag: endlag
+                        if (totalActiveFrames >= totalActiveFramesDesired) {
+                            if (endlag <= endlagDesired) {
+                                const desiredMove = {
+                                    name: dataPoint.Name,
+                                    initActFrame: firstActiveFrame,
+                                    totalActFrames: totalActiveFrames,
+                                    endingLag: endlag
+                                }
+                                desiredMoveList.push(desiredMove);
+                            }
                         }
-                        desiredMoveList.push(desiredMove);
                     }
                 }
                 console.log(desiredMoveList);
