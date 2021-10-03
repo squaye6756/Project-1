@@ -53,6 +53,18 @@ const calcFirstActiveFrame = (activeFrameStr) => {
     return activeFrameStr;
 }
 
+const calcTotalActiveFrames = (activeFramesStr) => {
+    if (activeFramesStr == null) {
+        return "N/A";
+    }
+    if (activeFramesStr.includes("-")) {
+        const firstFrame = activeFramesStr.split("-")[0];
+        const lastFrame = activeFramesStr.split("-")[1];
+        return parseInt(lastFrame) - parseInt(firstFrame) + 1;
+    }
+    return 1;
+}
+
 
 $( () => {
     $("form").on("submit", (event) => {
@@ -82,7 +94,9 @@ $( () => {
                 for (const dataPoint of data) {
                     console.log(dataPoint);
                     const firstActiveFrame = calcFirstActiveFrame(dataPoint.HitboxActive);
-                    console.log("FirstActiveFrame", firstActiveFrame);
+                    console.log("FirstActiveFrame:", firstActiveFrame);
+                    const totalActiveFrames = calcTotalActiveFrames(dataPoint.HitboxActive);
+                    console.log("totalActiveFrames:", totalActiveFrames);
                 }
             },
             () => {
