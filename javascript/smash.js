@@ -42,15 +42,15 @@ const stripSymbols = (word) => {
     return word;
 }
 
-const calcFirstActiveFrame = (activeFrameStr) => {
-    console.log(activeFrameStr);
-    if (activeFrameStr == null) {
+const calcFirstActiveFrame = (activeFramesStr) => {
+    console.log(activeFramesStr);
+    if (activeFramesStr == null) {
         return "N/A";
     }
-    if (activeFrameStr.includes("-")) {
-        return activeFrameStr.split("-")[0];
+    if (activeFramesStr.includes("-")) {
+        return activeFramesStr.split("-")[0];
     }
-    return activeFrameStr;
+    return activeFramesStr;
 }
 
 const calcTotalActiveFrames = (activeFramesStr) => {
@@ -63,6 +63,17 @@ const calcTotalActiveFrames = (activeFramesStr) => {
         return parseInt(lastFrame) - parseInt(firstFrame) + 1;
     }
     return 1;
+}
+
+const calcEndlag = (activeFramesStr, earliestActionFrame) => {
+    if (activeFramesStr == null || earliestActionFrame === "-") {
+        return "N/A";
+    }
+    if (activeFramesStr.includes("-")) {
+        const lastFrame = activeFramesStr.split("-")[1];
+        return parseInt(earliestActionFrame) - parseInt(lastFrame);
+    }
+    return parseInt(earliestActionFrame) - parseInt(activeFramesStr);
 }
 
 
@@ -97,6 +108,8 @@ $( () => {
                     console.log("FirstActiveFrame:", firstActiveFrame);
                     const totalActiveFrames = calcTotalActiveFrames(dataPoint.HitboxActive);
                     console.log("totalActiveFrames:", totalActiveFrames);
+                    const endlag = calcEndlag(dataPoint.HitboxActive, dataPoint.FirstActionableFrame);
+                    console.log("EndLag:", endlag);
                 }
             },
             () => {
