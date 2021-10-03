@@ -92,11 +92,11 @@ $( () => {
         let totalActiveFramesDesired = $("#total-active-frames").val();
         let endlagDesired = $("#endlag").val();
 
-        initActiveFrameDesired = initActiveFrameDesired == null ?
+        initActiveFrameDesired = initActiveFrameDesired == "" ?
             10000 : parseInt(initActiveFrameDesired);
-        totalActiveFramesDesired = totalActiveFramesDesired == null ?
+        totalActiveFramesDesired = totalActiveFramesDesired == ""?
             0 : parseInt(totalActiveFramesDesired);
-        endlagDesired = endlagDesired == null ?
+        endlagDesired = endlagDesired == "" ?
             10000 : parseInt(endlagDesired);
 
         let char = charSelected.split(" ").join("");
@@ -112,7 +112,7 @@ $( () => {
         }).then(
             (data) => {
                 for (const dataPoint of data) {
-                    console.log(dataPoint);
+                    // console.log(dataPoint);
                     const firstActiveFrame = calcFirstActiveFrame(dataPoint.HitboxActive);
                     console.log("First Active Frame:", firstActiveFrame);
                     const totalActiveFrames = calcTotalActiveFrames(dataPoint.HitboxActive);
@@ -121,8 +121,11 @@ $( () => {
                     console.log("EndLag:", endlag);
 
                     if (firstActiveFrame <= initActiveFrameDesired) {
+                        console.log('pass: 1');
                         if (totalActiveFrames >= totalActiveFramesDesired) {
+                            console.log('pass: 2');
                             if (endlag <= endlagDesired) {
+                                console.log('pass: 3 -> adding');
                                 const desiredMove = {
                                     name: dataPoint.Name,
                                     initActFrame: firstActiveFrame,
