@@ -30,27 +30,29 @@ const noInfo = ['Kazuya','Byleth','Alex','Steve'];
 //byleth,steve/alex, and kazuya not in list
 // console.log(validCharArr.length);
 
+const desiredMoveList = [];
+
 const stripSymbols = (word) => {
     while (word.includes(".")) {
-        console.log(`${word} included "."`);
+        // console.log(`${word} included "."`);
         word = word.replace(".","");
     }
     while (word.includes("&")) {
-        console.log(`${word} included "&"`);
+        // console.log(`${word} included "&"`);
         word = word.replace("&","");
     }
     return word;
 }
 
 const calcFirstActiveFrame = (activeFramesStr) => {
-    console.log(activeFramesStr);
+    // console.log(activeFramesStr);
     if (activeFramesStr == null) {
         return "N/A";
     }
     if (activeFramesStr.includes("-")) {
-        return activeFramesStr.split("-")[0];
+        return parseInt(activeFramesStr.split("-")[0]);
     }
-    return activeFramesStr;
+    return parseInt(activeFramesStr);
 }
 
 const calcTotalActiveFrames = (activeFramesStr) => {
@@ -105,12 +107,23 @@ $( () => {
                 for (const dataPoint of data) {
                     console.log(dataPoint);
                     const firstActiveFrame = calcFirstActiveFrame(dataPoint.HitboxActive);
-                    console.log("FirstActiveFrame:", firstActiveFrame);
+                    console.log("First Active Frame:", firstActiveFrame);
                     const totalActiveFrames = calcTotalActiveFrames(dataPoint.HitboxActive);
-                    console.log("totalActiveFrames:", totalActiveFrames);
+                    console.log("Total Active Frames:", totalActiveFrames);
                     const endlag = calcEndlag(dataPoint.HitboxActive, dataPoint.FirstActionableFrame);
                     console.log("EndLag:", endlag);
+
+                    if (firstActiveFrame <= initActiveFrameDesired) {
+                        const desiredMove = {
+                            name: dataPoint.Name,
+                            initActFrame: firstActiveFrame,
+                            totalActFrames: totalActiveFrames,
+                            endingLag: endlag
+                        }
+                        desiredMoveList.push(desiredMove);
+                    }
                 }
+                console.log(desiredMoveList);
             },
             () => {
                 console.log('bad request');
