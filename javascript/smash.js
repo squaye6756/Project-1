@@ -78,15 +78,65 @@ const calcEndlag = (activeFramesStr, earliestActionFrame) => {
     return parseInt(earliestActionFrame) - parseInt(activeFramesStr);
 }
 
+const seeNext = (event) => {
+
+}
+
+// const seePrev = (event) => {
+//     const $btnParent = $(event.currentTarget).parent();
+//     const $moveDivList = $btnParent.children().eq(1);
+//     console.log($moveDivList);
+//     $moveDivList.children().eq(currDisplayIndex).css('display','none');
+//     if (currDisplayIndex === 0) {
+//         currDisplayIndex = maxValidMoveIndex;
+//     } else {
+//         currDisplayIndex--;
+//     }
+//     $moveDivList.children().eq(currDisplayIndex).css('display','flex');
+// }
+
+//function to create and display carousel
 const makeCarousel = () => {
+    //removes previous display
     $("#desired-move-container").empty();
     let hide = 0;
+    let currDisplayIndex = 0;
+    const maxValidMoveIndex = desiredMoveList.length - 1;
+    //creates carousel container
     const $moveCarousel = $("<div>").addClass("move-carousel");
     $moveCarousel.css({'display':'flex','justify-content':'space-between'});
     $moveCarousel.css({'align-items':'center'});
+    //button to see the next valid move
     const $prevBtn = $("<button>").text("<").addClass('carousel-btn');
+    //function to see previous valid move in carousel
+    $prevBtn.on('click', (event) => {
+        const $btnParent = $(event.currentTarget).parent();
+        const $moveDivList = $btnParent.children().eq(1);
+        console.log($moveDivList);
+        $moveDivList.children().eq(currDisplayIndex).css('display','none');
+        if (currDisplayIndex === 0) {
+            currDisplayIndex = maxValidMoveIndex;
+        } else {
+            currDisplayIndex--;
+        }
+        $moveDivList.children().eq(currDisplayIndex).css('display','flex');
+    });
+    //button to see the previous valid move
     const $nextBtn = $("<button>").text(">").addClass('carousel-btn');
-    //div to hold moves in carousel
+    //function to see next valid move in carousel
+    $nextBtn.on('click', (event) => {
+        const $btnParent = $(event.currentTarget).parent();
+        const $moveDivList = $btnParent.children().eq(1);
+        console.log($moveDivList);
+        $moveDivList.children().eq(currDisplayIndex).css('display','none');
+        if (currDisplayIndex === maxValidMoveIndex) {
+            currDisplayIndex = 0;
+        } else {
+            currDisplayIndex++;
+        }
+        $moveDivList.children().eq(currDisplayIndex).css('display','flex');
+    })
+    //div to hold all moves in carousel
     const $moveDisplay = $("<div>").addClass("move-display");
     //loops through each valid move and creates "display boxes" for them
     for (const move of desiredMoveList) {
@@ -94,13 +144,16 @@ const makeCarousel = () => {
         const $desiredMove = $("<div>");
         $desiredMove.css({'display':'flex','flex-direction':'column'});
         $desiredMove.css({'justify-content':'space-around'});
+        //contents of each move to be displayed
         const $moveTitle = $("<h1>").text(move.name);
         const $moveInitActFrame = $("<p>");
         const $moveTotalActFrames = $("<p>");
         const $moveEndlag = $("<p>");
+        //text added
         $moveInitActFrame.text(`First Active Frame: ${move.initActFrame}`);
         $moveTotalActFrames.text(`Total Active Frames: ${move.totalActFrames}`);
         $moveEndlag.text(`Endlag: ${move.endingLag}`);
+        //contents added to its div holder
         $desiredMove.append($moveTitle);
         $desiredMove.append($moveInitActFrame);
         $desiredMove.append($moveTotalActFrames);
@@ -110,11 +163,16 @@ const makeCarousel = () => {
             $desiredMove.css('display','none');
         }
         hide++;
+        //move added to container of all moves
         $moveDisplay.append($desiredMove);
     }
+    //previous button added to carousel
     $moveCarousel.append($prevBtn);
+    //conatiner of moves added to carousel
     $moveCarousel.append($moveDisplay);
+    //next button added to carousel
     $moveCarousel.append($nextBtn);
+    //carousel displayed to screen
     $("#desired-move-container").append($moveCarousel);
 }
 
