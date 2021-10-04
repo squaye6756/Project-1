@@ -78,6 +78,34 @@ const calcEndlag = (activeFramesStr, earliestActionFrame) => {
     return parseInt(earliestActionFrame) - parseInt(activeFramesStr);
 }
 
+const makeCarousel = () => {
+    const $moveCarousel = $("<div>").addClass("move-carousel");
+    $moveCarousel.css({'display':'flex','justify-content':'space-between'});
+    const $prevBtn = $("<button>").text("previous");
+    const $nextBtn = $("<button>").text("next");
+    const $moveDisplay = $("<div>").addClass("move-display");
+    for (const move of desiredMoveList) {
+        const $desiredMove = $("<div>");
+        $desiredMove.css({'display':'flex','flex-direction':'column'});
+        $desiredMove.css({'justify-content':'space-around'});
+        const $moveTitle = $("<h1>").text(move.name);
+        const $moveInitActFrame = $("<p>");
+        const $moveTotalActFrames = $("<p>");
+        const $moveEndlag = $("<p>");
+        $moveInitActFrame.text(`First Active Frame: ${move.initActFrame}`);
+        $moveTotalActFrames.text(`Total Active Frames: ${move.totalActFrames}`);
+        $moveEndlag.text(`Endlag: ${move.endingLag}`);
+        $desiredMove.append($moveTitle);
+        $desiredMove.append($moveInitActFrame);
+        $desiredMove.append($moveTotalActFrames);
+        $desiredMove.append($moveEndlag);
+        $moveDisplay.append($desiredMove);
+    }
+    $moveCarousel.append($prevBtn);
+    $moveCarousel.append($moveDisplay);
+    $moveCarousel.append($nextBtn);
+    $("#desired-move-container").append($moveCarousel);
+}
 
 $( () => {
     $("form").on("submit", (event) => {
@@ -153,7 +181,7 @@ $( () => {
                         desiredMoveList.push(desiredMove);
                     }
                 }
-                console.log(desiredMoveList);
+                makeCarousel()
             },
             () => {
                 console.log('bad request');
