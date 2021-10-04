@@ -92,12 +92,16 @@ $( () => {
         let totalActiveFramesDesired = $("#total-active-frames").val();
         let endlagDesired = $("#endlag").val();
 
-        initActiveFrameDesired = initActiveFrameDesired == "" ?
-            10000 : parseInt(initActiveFrameDesired);
-        totalActiveFramesDesired = totalActiveFramesDesired == ""?
-            0 : parseInt(totalActiveFramesDesired);
-        endlagDesired = endlagDesired == "" ?
-            10000 : parseInt(endlagDesired);
+        const searchInitFrame = initActiveFrameDesired === "" ? false : true;
+        const searchActiveFrames = totalActiveFramesDesired === "" ? false : true;
+        const searchEndlag = endlagDesired === "" ? false : true;
+
+        // initActiveFrameDesired = initActiveFrameDesired == "" ?
+        //     10000 : parseInt(initActiveFrameDesired);
+        // totalActiveFramesDesired = totalActiveFramesDesired == ""?
+        //     0 : parseInt(totalActiveFramesDesired);
+        // endlagDesired = endlagDesired == "" ?
+        //     10000 : parseInt(endlagDesired);
 
         let char = charSelected.split(" ").join("");
         // console.log(char);
@@ -120,21 +124,33 @@ $( () => {
                     const endlag = calcEndlag(dataPoint.HitboxActive, dataPoint.FirstActionableFrame);
                     console.log("EndLag:", endlag);
 
-                    if (firstActiveFrame <= initActiveFrameDesired) {
-                        console.log('pass: 1');
-                        if (totalActiveFrames >= totalActiveFramesDesired) {
-                            console.log('pass: 2');
-                            if (endlag <= endlagDesired) {
-                                console.log('pass: 3 -> adding');
-                                const desiredMove = {
-                                    name: dataPoint.Name,
-                                    initActFrame: firstActiveFrame,
-                                    totalActFrames: totalActiveFrames,
-                                    endingLag: endlag
-                                }
-                                desiredMoveList.push(desiredMove);
-                            }
+                    let validByInitFrame = true;
+                    if (searchInitFrame) {
+                        if (!(firstActiveFrame <= initActiveFrameDesired)) {
+                            validByInitFrame = false;
                         }
+                    }
+                    let validByActiveFrames = true;
+                    if (searchActiveFrames) {
+                        if (!(totalActiveFrames >= totalActiveFramesDesired)) {
+                            validByActiveFrames = false;
+                        }
+                    }
+                    let validByEndlag = true;
+                    if (searchEndlag) {
+                        if (!(endlag <= endlagDesired)) {
+                            validByEndlag = false;
+                        }
+                    }
+
+                    if (validByEndlag && validByInitFrame && validByActiveFrames) {
+                        const desiredMove = {
+                            name: dataPoint.Name,
+                            initActFrame: firstActiveFrame,
+                            totalActFrames: totalActiveFrames,
+                            endingLag: endlag
+                        }
+                        desiredMoveList.push(desiredMove);
                     }
                 }
                 console.log(desiredMoveList);
