@@ -86,8 +86,11 @@ const makeCarousel = () => {
     $moveCarousel.css({'align-items':'center'});
     const $prevBtn = $("<button>").text("<").addClass('carousel-btn');
     const $nextBtn = $("<button>").text(">").addClass('carousel-btn');
+    //div to hold moves in carousel
     const $moveDisplay = $("<div>").addClass("move-display");
+    //loops through each valid move and creates "display boxes" for them
     for (const move of desiredMoveList) {
+        //div to hold contents of the move
         const $desiredMove = $("<div>");
         $desiredMove.css({'display':'flex','flex-direction':'column'});
         $desiredMove.css({'justify-content':'space-around'});
@@ -102,6 +105,11 @@ const makeCarousel = () => {
         $desiredMove.append($moveInitActFrame);
         $desiredMove.append($moveTotalActFrames);
         $desiredMove.append($moveEndlag);
+        //if clause to ensure that the carousel displays only one div initially
+        if (hide) {
+            $desiredMove.css('display','none');
+        }
+        hide++;
         $moveDisplay.append($desiredMove);
     }
     $moveCarousel.append($prevBtn);
