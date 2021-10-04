@@ -79,6 +79,8 @@ const calcEndlag = (activeFramesStr, earliestActionFrame) => {
 }
 
 const makeCarousel = () => {
+    $("#desired-move-container").empty();
+    let hide = 0;
     const $moveCarousel = $("<div>").addClass("move-carousel");
     $moveCarousel.css({'display':'flex','justify-content':'space-between'});
     const $prevBtn = $("<button>").text("previous");
@@ -181,7 +183,8 @@ $( () => {
                         desiredMoveList.push(desiredMove);
                     }
                 }
-                makeCarousel()
+                makeCarousel();
+                desiredMoveList.splice(0, desiredMoveList.length);
             },
             () => {
                 console.log('bad request');
