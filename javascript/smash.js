@@ -55,13 +55,18 @@ const calcFirstActiveFrame = (activeFramesStr) => {
     return parseInt(activeFramesStr);
 }
 
-const calcTotalActiveFrames = (activeFramesStr) => {
+const calcTotalActiveFrames = (activeFramesStr, earliestActionFrame) => {
     if (activeFramesStr == null) {
         return "N/A";
     }
     if (activeFramesStr.includes("-")) {
+        console.log(activeFramesStr);
+        console.log(activeFramesStr.split("-"));
         const firstFrame = activeFramesStr.split("-")[0];
         const lastFrame = activeFramesStr.split("-")[1];
+        if (activeFramesStr.split("-")[1] === "") {
+            return parseInt(earliestActionFrame) - parseInt(activeFramesStr.split("-")[0]);
+        }
         return parseInt(lastFrame) - parseInt(firstFrame) + 1;
     }
     return 1;
@@ -73,14 +78,17 @@ const calcEndlag = (activeFramesStr, earliestActionFrame) => {
     }
     if (activeFramesStr.includes("-")) {
         const lastFrame = activeFramesStr.split("-")[1];
+        if (lastFrame === "") {
+            return 0;
+        }
         return parseInt(earliestActionFrame) - parseInt(lastFrame);
     }
     return parseInt(earliestActionFrame) - parseInt(activeFramesStr);
 }
 
-const seeNext = (event) => {
-
-}
+// const seeNext = (event) => {
+//
+// }
 
 // const seePrev = (event) => {
 //     const $btnParent = $(event.currentTarget).parent();
@@ -213,10 +221,10 @@ $( () => {
         }).then(
             (data) => {
                 for (const dataPoint of data) {
-                    // console.log(dataPoint);
+                    console.log(dataPoint);
                     const firstActiveFrame = calcFirstActiveFrame(dataPoint.HitboxActive);
                     console.log("First Active Frame:", firstActiveFrame);
-                    const totalActiveFrames = calcTotalActiveFrames(dataPoint.HitboxActive);
+                    const totalActiveFrames = calcTotalActiveFrames(dataPoint.HitboxActive, dataPoint.FirstActionableFrame);
                     console.log("Total Active Frames:", totalActiveFrames);
                     const endlag = calcEndlag(dataPoint.HitboxActive, dataPoint.FirstActionableFrame);
                     console.log("EndLag:", endlag);
