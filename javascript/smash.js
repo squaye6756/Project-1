@@ -83,8 +83,9 @@ const makeCarousel = () => {
     let hide = 0;
     const $moveCarousel = $("<div>").addClass("move-carousel");
     $moveCarousel.css({'display':'flex','justify-content':'space-between'});
-    const $prevBtn = $("<button>").text("previous");
-    const $nextBtn = $("<button>").text("next");
+    $moveCarousel.css({'align-items':'center'});
+    const $prevBtn = $("<button>").text("<").addClass('carousel-btn');
+    const $nextBtn = $("<button>").text(">").addClass('carousel-btn');
     const $moveDisplay = $("<div>").addClass("move-display");
     for (const move of desiredMoveList) {
         const $desiredMove = $("<div>");
