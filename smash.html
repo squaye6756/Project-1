@@ -15,15 +15,25 @@
             <img src="./images/smash_logo.jpeg" alt="Smash Logo">
             <h2>Frames, Frames, Frames</h2>
             <form> <!-- https://www.w3docs.com/snippets/html/how-to-align-labels-next-to-inputs.html -->
-                <label for="character">Character:</label>
-                <input type="text" name="character" id="character"/>
-                <label for="init-active-frame">Initial Active Frame:</label>
-                <input type="text" name="Initial Active Frame" id="init-active-frame"/>
-                <label for="total-active-frames">Total Active Frames:</label>
-                <input type="text" name="Active Frames" id="total-active-frames"/>
-                <label for="endlag">Endlag:</label>
-                <input type="text" name="Endlag" id="endlag"/>
-                <input type="submit" value="Search"/>
+                <div id="form-container">
+                    <div class="form-elmt">
+                        <label for="character">Character:</label>
+                        <input type="text" name="character" id="character"/>
+                    </div>
+                    <div class="form-elmt">
+                        <label for="init-active-frame">Initial Active Frame:</label>
+                        <input type="text" name="Initial Active Frame" id="init-active-frame"/>
+                    </div>
+                    <div class="form-elmt">
+                        <label for="total-active-frames">Total Active Frames:</label>
+                        <input type="text" name="Active Frames" id="total-active-frames"/>
+                    </div>
+                    <div class="form-elmt">
+                        <label for="endlag">Endlag:</label>
+                        <input type="text" name="Endlag" id="endlag"/>
+                    </div>
+                    <input type="submit" value="Search"/>
+                </div>
             </form>
         </div>
         <div id="desired-move-container"></div>
