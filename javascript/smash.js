@@ -11,18 +11,18 @@ console.log('here');
 // ]
 
 const validCharArr = [
-    'Mario','DonkeyKong','Link','Samus','DarkSamus','Yoshi','Kirby','Fox',
-    'Pikacu','Luigi','Ness','Peach','Daisy','Bowser','IceClimbers','Sheik',
-    'Zelda','DrMario','Pichu','Falco','Marth','Lucina','YoungLink','Ganondorf',
-    'Mewtwo','Roy','Chrom','MrGameWatch','MetaKnight','Pit','DarkPit',
-    'ZeroSuitSamus','PokemonTrainer','DiddyKong','DiddyKong','Lucas','Sonic',
-    'KingDedede','Squirtle','Ivysaur','Charizard','Olimar','Lucario','Rob',
-    'ToonLink','Wolf','Villager','MegaMan','WiiFitTrainer','RosalinaLuma',
-    'LittleMac','Greninja','MiiSwordfighter','MiiGunner','MiiBrawlwer',
-    'Palutena','PacMan','Robin','Shulk','BowserJr','DuckHunt','Ryu','Ken',
+    'Mario','Donkey Kong','Link','Samus','Dark Samus','Yoshi','Kirby','Fox',
+    'Pikacu','Luigi','Ness','Peach','Daisy','Bowser','Ice Climbers','Sheik',
+    'Zelda','Dr. Mario','Pichu','Falco','Marth','Lucina','Young Link','Ganondorf',
+    'Mewtwo','Roy','Chrom','Mr. Game & Watch','Meta Knight','Pit','Dark Pit',
+    'Zero Suit Samus','DiddyKong','DiddyKong','Lucas','Sonic','King Dedede',
+    'Squirtle','Ivysaur','Charizard','Olimar','Lucario','Rob',
+    'Toon Link','Wolf','Villager','Mega Man','Wii Fit Trainer','Rosalina & Luma',
+    'Little Mac','Greninja','Mii Swordfighter','Mii Gunner','Mii Brawler',
+    'Palutena','Pac-Man','Robin','Shulk','Bowser Jr.','Duck Hunt','Ryu','Ken',
     'Cloud','Corrin','Bayonetta','Inkling','Ridley','Simon','Richter',
-    'KingKRool','Isabelle','Incineroar','PiranhaPlant','Joker','Hero',
-    'BanjoKazooie','Terry',/*'Byleth',*/'MinMin',/*'Steve','Alex',*/'Sephiroth',
+    'King K. Rool','Isabelle','Incineroar','Piranha Plant','Joker','Hero',
+    'Banjo Kazooie','Terry',/*'Byleth',*/'Min Min',/*'Steve','Alex',*/'Sephiroth',
     'Pyra','Mythra'/*,'Kazuya'*/
 ]
 
@@ -32,6 +32,12 @@ const noInfo = ['Kazuya','Byleth','Alex','Steve'];
 
 const desiredMoveList = [];
 
+const fillOptions = () => { //HTML & CSS by Jon Duckett
+    for (const char of validCharArr) {
+        $("#character").append($("<option>").text(char));
+    }
+}
+
 const stripSymbols = (word) => {
     while (word.includes(".")) {
         // console.log(`${word} included "."`);
@@ -40,6 +46,9 @@ const stripSymbols = (word) => {
     while (word.includes("&")) {
         // console.log(`${word} included "&"`);
         word = word.replace("&","");
+    }
+    while (word.includes("-")) {
+        word = word.replace("-","");
     }
     return word;
 }
@@ -185,6 +194,7 @@ const makeCarousel = () => {
 }
 
 $( () => {
+    fillOptions();
     $("form").on("submit", (event) => {
         event.preventDefault();
 
@@ -249,13 +259,15 @@ $( () => {
                     }
 
                     if (validByEndlag && validByInitFrame && validByActiveFrames) {
-                        const desiredMove = {
-                            name: dataPoint.Name,
-                            initActFrame: firstActiveFrame,
-                            totalActFrames: totalActiveFrames,
-                            endingLag: endlag
+                        if (!(dataPoint.Name).includes("throw")) {
+                            const desiredMove = {
+                                name: dataPoint.Name,
+                                initActFrame: firstActiveFrame,
+                                totalActFrames: totalActiveFrames,
+                                endingLag: endlag
+                            }
+                            desiredMoveList.push(desiredMove);
                         }
-                        desiredMoveList.push(desiredMove);
                     }
                 }
                 makeCarousel();

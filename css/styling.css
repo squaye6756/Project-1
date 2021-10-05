@@ -23,7 +23,7 @@
     height: 50px;
 }
 
-@media (max-width: 300px) {
+@media (max-width: 400px) {
     /* body {
         background-color: blue;
     } */
@@ -33,6 +33,6 @@
         align-items: center;
     }
     [type="submit"] {
-        width: 20%;
+        width: 70px;
     }
 }
