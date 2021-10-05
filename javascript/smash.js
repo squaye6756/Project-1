@@ -1,4 +1,4 @@
-console.log('here');
+// console.log('here');
 
 // const validCharArray = [
 //     'Bayonetta','Bowser','BowserJr','CaptainFalcon','Charizard','Cloud','Corrin',
@@ -69,8 +69,8 @@ const calcTotalActiveFrames = (activeFramesStr, earliestActionFrame) => {
         return "N/A";
     }
     if (activeFramesStr.includes("-")) {
-        console.log(activeFramesStr);
-        console.log(activeFramesStr.split("-"));
+        // console.log(activeFramesStr);
+        // console.log(activeFramesStr.split("-"));
         const firstFrame = activeFramesStr.split("-")[0];
         const lastFrame = activeFramesStr.split("-")[1];
         if (activeFramesStr.split("-")[1] === "") {
@@ -95,23 +95,6 @@ const calcEndlag = (activeFramesStr, earliestActionFrame) => {
     return parseInt(earliestActionFrame) - parseInt(activeFramesStr);
 }
 
-// const seeNext = (event) => {
-//
-// }
-
-// const seePrev = (event) => {
-//     const $btnParent = $(event.currentTarget).parent();
-//     const $moveDivList = $btnParent.children().eq(1);
-//     console.log($moveDivList);
-//     $moveDivList.children().eq(currDisplayIndex).css('display','none');
-//     if (currDisplayIndex === 0) {
-//         currDisplayIndex = maxValidMoveIndex;
-//     } else {
-//         currDisplayIndex--;
-//     }
-//     $moveDivList.children().eq(currDisplayIndex).css('display','flex');
-// }
-
 //function to create and display carousel
 const makeCarousel = () => {
     //removes previous display
@@ -129,7 +112,7 @@ const makeCarousel = () => {
     $prevBtn.on('click', (event) => {
         const $btnParent = $(event.currentTarget).parent();
         const $moveDivList = $btnParent.children().eq(1);
-        console.log($moveDivList);
+        // console.log($moveDivList);
         $moveDivList.children().eq(currDisplayIndex).css('display','none');
         if (currDisplayIndex === 0) {
             currDisplayIndex = maxValidMoveIndex;
@@ -144,7 +127,7 @@ const makeCarousel = () => {
     $nextBtn.on('click', (event) => {
         const $btnParent = $(event.currentTarget).parent();
         const $moveDivList = $btnParent.children().eq(1);
-        console.log($moveDivList);
+        // console.log($moveDivList);
         $moveDivList.children().eq(currDisplayIndex).css('display','none');
         if (currDisplayIndex === maxValidMoveIndex) {
             currDisplayIndex = 0;
@@ -198,7 +181,7 @@ $( () => {
     $("form").on("submit", (event) => {
         event.preventDefault();
 
-        console.log($("#character").val());
+        // console.log($("#character").val());
         // console.log($("#init-active-frame").val());
         // console.log($("#total-active-frames").val());
         // console.log($("#endlag").val());
@@ -231,13 +214,13 @@ $( () => {
         }).then(
             (data) => {
                 for (const dataPoint of data) {
-                    console.log(dataPoint);
+                    // console.log(dataPoint);
                     const firstActiveFrame = calcFirstActiveFrame(dataPoint.HitboxActive);
-                    console.log("First Active Frame:", firstActiveFrame);
+                    // console.log("First Active Frame:", firstActiveFrame);
                     const totalActiveFrames = calcTotalActiveFrames(dataPoint.HitboxActive, dataPoint.FirstActionableFrame);
-                    console.log("Total Active Frames:", totalActiveFrames);
+                    // console.log("Total Active Frames:", totalActiveFrames);
                     const endlag = calcEndlag(dataPoint.HitboxActive, dataPoint.FirstActionableFrame);
-                    console.log("EndLag:", endlag);
+                    // console.log("EndLag:", endlag);
 
                     let validByInitFrame = true;
                     if (searchInitFrame) {
