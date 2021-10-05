@@ -194,74 +194,98 @@ $( () => {
         const searchActiveFrames = totalActiveFramesDesired === "" ? false : true;
         const searchEndlag = endlagDesired === "" ? false : true;
 
-        // initActiveFrameDesired = initActiveFrameDesired == "" ?
-        //     10000 : parseInt(initActiveFrameDesired);
-        // totalActiveFramesDesired = totalActiveFramesDesired == ""?
-        //     0 : parseInt(totalActiveFramesDesired);
-        // endlagDesired = endlagDesired == "" ?
-        //     10000 : parseInt(endlagDesired);
+        let invalidInput = false;
 
-        let char = charSelected.split(" ").join("");
-        // console.log(char);
-        char = stripSymbols(char);
-        // console.log(char);
-
-        // let ajaxLink = `https://api.kuroganehammer.com/api/characters/name/${char}/moves?game=ultimate`;
-        let ajaxLinkTwo = `https://api.kuroganehammer.com/api/characters/name/${char}/moves?expand=false?game=ultimate`;
-
-        $.ajax({
-            url: ajaxLinkTwo
-        }).then(
-            (data) => {
-                for (const dataPoint of data) {
-                    // console.log(dataPoint);
-                    const firstActiveFrame = calcFirstActiveFrame(dataPoint.HitboxActive);
-                    // console.log("First Active Frame:", firstActiveFrame);
-                    const totalActiveFrames = calcTotalActiveFrames(dataPoint.HitboxActive, dataPoint.FirstActionableFrame);
-                    // console.log("Total Active Frames:", totalActiveFrames);
-                    const endlag = calcEndlag(dataPoint.HitboxActive, dataPoint.FirstActionableFrame);
-                    // console.log("EndLag:", endlag);
-
-                    let validByInitFrame = true;
-                    if (searchInitFrame) {
-                        if (!(firstActiveFrame <= initActiveFrameDesired)) {
-                            validByInitFrame = false;
-                        }
-                    }
-                    let validByActiveFrames = true;
-                    if (searchActiveFrames) {
-                        if (!(totalActiveFrames >= totalActiveFramesDesired)) {
-                            validByActiveFrames = false;
-                        }
-                    }
-                    let validByEndlag = true;
-                    if (searchEndlag) {
-                        if (!(endlag <= endlagDesired)) {
-                            validByEndlag = false;
-                        }
-                    }
-
-                    if (validByEndlag && validByInitFrame && validByActiveFrames) {
-                        if (!(dataPoint.Name).includes("throw")) {
-                            const desiredMove = {
-                                name: dataPoint.Name,
-                                initActFrame: firstActiveFrame,
-                                totalActFrames: totalActiveFrames,
-                                endingLag: endlag
-                            }
-                            desiredMoveList.push(desiredMove);
-                        }
-                    }
-                }
-                makeCarousel();
-                desiredMoveList.splice(0, desiredMoveList.length);
-            },
-            () => {
-                console.log('bad request');
+        if (searchInitFrame) {
+            let lengthOfStr = initActiveFrameDesired.length;
+            let lengthOfNum = parseInt(initActiveFrameDesired).toString().length;
+            if (lengthOfStr !== lengthOfNum) {
+                alert("Invalid input for initial active frame (must be a number).");
+                invalidInput = true;
             }
-        )
+        }
 
-        $(event.currentTarget).trigger("reset");
+        if (searchActiveFrames) {
+            lengthOfStr = totalActiveFramesDesired.length;
+            lengthOfNum = parseInt(totalActiveFramesDesired).toString().length;
+            if (lengthOfStr !== lengthOfNum) {
+                alert("Invalid input for total active frames (must be a number).");
+                invalidInput = true;
+            }
+        }
+
+        if (searchEndlag) {
+            lengthOfStr = endlagDesired.length;
+            lengthOfNum = parseInt(endlagDesired).toString().length;
+            if (lengthOfStr !== lengthOfNum) {
+                alert("Invalid input for endlag (must be a number).");
+                invalidInput = true;
+            }
+        }
+
+        if (!invalidInput) {
+            let char = charSelected.split(" ").join("");
+            // console.log(char);
+            char = stripSymbols(char);
+            // console.log(char);
+
+            // let ajaxLink = `https://api.kuroganehammer.com/api/characters/name/${char}/moves?game=ultimate`;
+            let ajaxLinkTwo = `https://api.kuroganehammer.com/api/characters/name/${char}/moves?expand=false?game=ultimate`;
+
+            $.ajax({
+                url: ajaxLinkTwo
+            }).then(
+                (data) => {
+                    for (const dataPoint of data) {
+                        // console.log(dataPoint);
+                        const firstActiveFrame = calcFirstActiveFrame(dataPoint.HitboxActive);
+                        // console.log("First Active Frame:", firstActiveFrame);
+                        const totalActiveFrames = calcTotalActiveFrames(dataPoint.HitboxActive, dataPoint.FirstActionableFrame);
+                        // console.log("Total Active Frames:", totalActiveFrames);
+                        const endlag = calcEndlag(dataPoint.HitboxActive, dataPoint.FirstActionableFrame);
+                        // console.log("EndLag:", endlag);
+
+                        let validByInitFrame = true;
+                        if (searchInitFrame) {
+                            if (!(firstActiveFrame <= initActiveFrameDesired)) {
+                                validByInitFrame = false;
+                            }
+                        }
+                        let validByActiveFrames = true;
+                        if (searchActiveFrames) {
+                            if (!(totalActiveFrames >= totalActiveFramesDesired)) {
+                                validByActiveFrames = false;
+                            }
+                        }
+                        let validByEndlag = true;
+                        if (searchEndlag) {
+                            if (!(endlag <= endlagDesired)) {
+                                validByEndlag = false;
+                            }
+                        }
+
+                        if (validByEndlag && validByInitFrame && validByActiveFrames) {
+                            if (!(dataPoint.Name).includes("throw")) {
+                                const desiredMove = {
+                                    name: dataPoint.Name,
+                                    initActFrame: firstActiveFrame,
+                                    totalActFrames: totalActiveFrames,
+                                    endingLag: endlag
+                                }
+                                desiredMoveList.push(desiredMove);
+                            }
+                        }
+                    }
+                    makeCarousel();
+                    desiredMoveList.splice(0, desiredMoveList.length);
+                },
+                () => {
+                    console.log('bad request');
+                }
+            )
+
+            $(event.currentTarget).trigger("reset");
+        }
     })
 })
 // bad: 84,85,86
