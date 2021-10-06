@@ -9,12 +9,12 @@ const validCharArr = [
     'Little Mac','Greninja','Mii Swordfighter','Mii Gunner','Mii Brawler',
     'Palutena','Pac-Man','Robin','Shulk','Bowser Jr.','Duck Hunt','Ryu','Ken',
     'Cloud','Corrin','Bayonetta','Inkling','Ridley','Simon','Richter',
-    'King K. Rool','Isabelle','Incineroar','Piranha Plant','Joker','Hero',
+    'King K. Rool','Incineroar','Piranha Plant','Joker','Hero',
     'Banjo Kazooie','Terry',/*'Byleth',*/'Min Min',/*'Steve','Alex',*/'Sephiroth',
     'Pyra','Mythra'/*,'Kazuya'*/
 ]
 
-const noInfo = ['Kazuya','Byleth','Alex','Steve','Dark Samus'];
+const noInfo = ['Kazuya','Byleth','Alex','Steve','Dark Samus','Isabelle'];
 //byleth,steve/alex, and kazuya not in list
 // console.log(validCharArr.length);
 
