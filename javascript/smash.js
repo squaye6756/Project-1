@@ -1,3 +1,4 @@
+//list of valid characters in ajax link
 const validCharArr = [
     'Mario','Donkey Kong','Link','Samus','Yoshi','Kirby','Fox',
     'Pikachu','Luigi','Ness','Peach','Daisy','Bowser','Ice Climbers','Sheik',
@@ -14,10 +15,10 @@ const validCharArr = [
     'Pyra','Mythra'/*,'Kazuya'*/
 ]
 
+//list of invalid characters in ajax link
 const noInfo = ['Kazuya','Byleth','Alex','Steve','Dark Samus','Isabelle'];
-//byleth,steve/alex, and kazuya not in list
-// console.log(validCharArr.length);
 
+//array to hold valid moves via user's search
 const desiredMoveList = [];
 
 //creates dropdown menu options
