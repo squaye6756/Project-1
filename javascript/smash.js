@@ -1,21 +1,9 @@
-// console.log('here');
-
-// const validCharArray = [
-//     'Bayonetta','Bowser','BowserJr','CaptainFalcon','Charizard','Cloud','Corrin',
-//     'DarkPit','DiddyKong','DonkeyKong','DrMario','DuckHunt','Falco','Fox','Ganondorf',
-//     'Greninja','Ike','Jigglypuff','KingDedede','Kirby','Link','LittleMac','Lucario',
-//     'Lucas','Lucina','Luigi','Mario','Marth','MegaMan','MetaKnight','Mewtwo',
-//     'MiiSwordfighter','MiiBrawlwer','MiiGunner','MrGameWatch','Ness','Olimar',
-//     'Pac-man','Palutena','Peach','Pikachu','Pit','Rob','Robin','RosalinaLuma',
-//     'Roy','Ryu','Samus','Sheik',''
-// ]
-
 const validCharArr = [
-    'Mario','Donkey Kong','Link','Samus','Dark Samus','Yoshi','Kirby','Fox',
-    'Pikacu','Luigi','Ness','Peach','Daisy','Bowser','Ice Climbers','Sheik',
+    'Mario','Donkey Kong','Link','Samus','Yoshi','Kirby','Fox',
+    'Pikachu','Luigi','Ness','Peach','Daisy','Bowser','Ice Climbers','Sheik',
     'Zelda','Dr. Mario','Pichu','Falco','Marth','Lucina','Young Link','Ganondorf',
     'Mewtwo','Roy','Chrom','Mr. Game & Watch','Meta Knight','Pit','Dark Pit',
-    'Zero Suit Samus','DiddyKong','DiddyKong','Lucas','Sonic','King Dedede',
+    'Zero Suit Samus','Diddy Kong','Lucas','Sonic','King Dedede',
     'Squirtle','Ivysaur','Charizard','Olimar','Lucario','Rob',
     'Toon Link','Wolf','Villager','Mega Man','Wii Fit Trainer','Rosalina & Luma',
     'Little Mac','Greninja','Mii Swordfighter','Mii Gunner','Mii Brawler',
@@ -26,7 +14,7 @@ const validCharArr = [
     'Pyra','Mythra'/*,'Kazuya'*/
 ]
 
-const noInfo = ['Kazuya','Byleth','Alex','Steve'];
+const noInfo = ['Kazuya','Byleth','Alex','Steve','Dark Samus'];
 //byleth,steve/alex, and kazuya not in list
 // console.log(validCharArr.length);
 
@@ -46,9 +34,6 @@ const stripSymbols = (word) => {
     while (word.includes("&")) {
         // console.log(`${word} included "&"`);
         word = word.replace("&","");
-    }
-    while (word.includes("-")) {
-        word = word.replace("-","");
     }
     return word;
 }
@@ -95,10 +80,16 @@ const calcEndlag = (activeFramesStr, earliestActionFrame) => {
     return parseInt(earliestActionFrame) - parseInt(activeFramesStr);
 }
 
-//function to create and display carousel
-const makeCarousel = () => {
+const addImage = (name) => {
     //removes previous display
     $("#desired-move-container").empty();
+    const $charImage = $("<img>").attr('src',`./images/${name}.png`);
+    $charImage.addClass('char-img');
+    $("#desired-move-container").append($charImage);
+}
+
+//function to create and display carousel
+const makeCarousel = () => {
     let hide = 0;
     let currDisplayIndex = 0;
     const maxValidMoveIndex = desiredMoveList.length - 1;
@@ -224,13 +215,17 @@ $( () => {
         }
 
         if (!invalidInput) {
-            let char = charSelected.split(" ").join("");
+            let char = charSelected;
+            if (!(charSelected === "Min Min")) {
+                char = charSelected.split(" ").join("");
+            }
+
             // console.log(char);
             char = stripSymbols(char);
             // console.log(char);
 
             // let ajaxLink = `https://api.kuroganehammer.com/api/characters/name/${char}/moves?game=ultimate`;
-            let ajaxLinkTwo = `https://api.kuroganehammer.com/api/characters/name/${char}/moves?expand=false?game=ultimate`;
+            let ajaxLinkTwo = `https://api.kuroganehammer.com/api/characters/name/${char}/moves/`;
 
             $.ajax({
                 url: ajaxLinkTwo
@@ -276,6 +271,7 @@ $( () => {
                             }
                         }
                     }
+                    addImage(char);
                     makeCarousel();
                     desiredMoveList.splice(0, desiredMoveList.length);
                 },
@@ -288,5 +284,3 @@ $( () => {
         }
     })
 })
-// bad: 84,85,86
-// 83
