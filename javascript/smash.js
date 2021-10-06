@@ -86,14 +86,24 @@ const calcEndlag = (activeFramesStr, earliestActionFrame) => {
     if (activeFramesStr == null || earliestActionFrame === "-") {
         return "N/A";
     }
-    if (activeFramesStr.includes("-")) {
+    const regexDigitDashDigit = /\d-\d/;
+    regexTest = new RegExp(regexDigitDashDigit).test(activeFramesStr);
+    if (regexTest) {
+        const firstFrame = activeFramesStr.split("-")[0];
         const lastFrame = activeFramesStr.split("-")[1];
-        if (lastFrame === "") {
-            return 0;
-        }
         return parseInt(earliestActionFrame) - parseInt(lastFrame);
     }
-    return parseInt(earliestActionFrame) - parseInt(activeFramesStr);
+    const regexDigitDash = /\d-/;
+    regexTest = new RegExp(regexDigitDash).test(activeFramesStr);
+    if (regexTest) {
+        return "N/A";
+    }
+    const regexDigit = /\d/;
+    regexTest = new RegExp(regexDigit).test(activeFramesStr);
+    if (regexTest) {
+        return parseInt(earliestActionFrame) - parseInt(activeFramesStr);
+    }
+    return "N/A";
 }
 
 const addImage = (name) => {
