@@ -28,25 +28,31 @@ const fillOptions = () => { //HTML & CSS by Jon Duckett
 
 const stripSymbols = (word) => {
     while (word.includes(".")) {
-        // console.log(`${word} included "."`);
         word = word.replace(".","");
     }
     while (word.includes("&")) {
-        // console.log(`${word} included "&"`);
         word = word.replace("&","");
     }
     return word;
 }
 
 const calcFirstActiveFrame = (activeFramesStr) => {
-    // console.log(activeFramesStr);
-    if (activeFramesStr == null) {
-        return "N/A";
-    }
-    if (activeFramesStr.includes("-")) {
+    const regexDigitDashDigit = /\d-\d/;
+    let regexTest = new RegExp(regexDigitDashDigit).test(activeFramesStr);
+    // console.log(regexTest);
+    if (regexTest) {
         return parseInt(activeFramesStr.split("-")[0]);
     }
-    return parseInt(activeFramesStr);
+    const regexDigitDash = /\d-/;
+    regexTest = new RegExp(regexDigitDash).test(activeFramesStr);
+    // console.log(regexTest);
+    if (regexTest) {
+        return parseInt(activeFramesStr.split("-")[0]);
+    }
+    // const regexDigitAndCommas = /(\b\d,)/;
+    // regexTest = new RegExp(regexDigitDash).test(activeFramesStr);
+    // console.log(regexTest);
+    return "N/A";
 }
 
 const calcTotalActiveFrames = (activeFramesStr, earliestActionFrame) => {
@@ -54,8 +60,6 @@ const calcTotalActiveFrames = (activeFramesStr, earliestActionFrame) => {
         return "N/A";
     }
     if (activeFramesStr.includes("-")) {
-        // console.log(activeFramesStr);
-        // console.log(activeFramesStr.split("-"));
         const firstFrame = activeFramesStr.split("-")[0];
         const lastFrame = activeFramesStr.split("-")[1];
         if (activeFramesStr.split("-")[1] === "") {
@@ -232,7 +236,7 @@ $( () => {
             }).then(
                 (data) => {
                     for (const dataPoint of data) {
-                        // console.log(dataPoint);
+                        console.log(dataPoint);
                         const firstActiveFrame = calcFirstActiveFrame(dataPoint.HitboxActive);
                         // console.log("First Active Frame:", firstActiveFrame);
                         const totalActiveFrames = calcTotalActiveFrames(dataPoint.HitboxActive, dataPoint.FirstActionableFrame);
