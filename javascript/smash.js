@@ -39,15 +39,18 @@ const stripSymbols = (word) => {
 const calcFirstActiveFrame = (activeFramesStr) => {
     const regexDigitDashDigit = /\d-\d/;
     let regexTest = new RegExp(regexDigitDashDigit).test(activeFramesStr);
-    // console.log(regexTest);
     if (regexTest) {
         return parseInt(activeFramesStr.split("-")[0]);
     }
     const regexDigitDash = /\d-/;
     regexTest = new RegExp(regexDigitDash).test(activeFramesStr);
-    // console.log(regexTest);
     if (regexTest) {
         return parseInt(activeFramesStr.split("-")[0]);
+    }
+    const regexDigit = /\d/;
+    regexTest = new RegExp(regexDigit).test(activeFramesStr);
+    if (regexTest) {
+        return parseInt(activeFramesStr);
     }
     // const regexDigitAndCommas = /(\b\d,)/;
     // regexTest = new RegExp(regexDigitDash).test(activeFramesStr);
@@ -56,18 +59,27 @@ const calcFirstActiveFrame = (activeFramesStr) => {
 }
 
 const calcTotalActiveFrames = (activeFramesStr, earliestActionFrame) => {
-    if (activeFramesStr == null) {
-        return "N/A";
-    }
-    if (activeFramesStr.includes("-")) {
+    const regexDigitDashDigit = /\d-\d/;
+    regexTest = new RegExp(regexDigitDashDigit).test(activeFramesStr);
+    if (regexTest) {
         const firstFrame = activeFramesStr.split("-")[0];
         const lastFrame = activeFramesStr.split("-")[1];
-        if (activeFramesStr.split("-")[1] === "") {
-            return parseInt(earliestActionFrame) - parseInt(activeFramesStr.split("-")[0]);
-        }
         return parseInt(lastFrame) - parseInt(firstFrame) + 1;
     }
-    return 1;
+    if (earliestActionFrame === "-") {
+        return "N/A";
+    }
+    const regexDigitDash = /\d-/;
+    regexTest = new RegExp(regexDigitDash).test(activeFramesStr);
+    if (regexTest) {
+        return parseInt(earliestActionFrame) - parseInt(activeFramesStr.split("-")[0]);
+    }
+    const regexDigit = /\d/;
+    regexTest = new RegExp(regexDigit).test(activeFramesStr);
+    if (regexTest) {
+        return parseInt(earliestActionFrame) - parseInt(activeFramesStr);
+    }
+    return "N/A";
 }
 
 const calcEndlag = (activeFramesStr, earliestActionFrame) => {
