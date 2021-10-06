@@ -116,9 +116,16 @@ const addImage = (name) => {
 
 //function to create and display carousel
 const makeCarousel = () => {
+    //tells user their search yielded no results
+    if (desiredMoveList.length === 0) {
+        $("#desired-move-container").append($("<h2>").text("No Matches of Search"));
+        return;
+    }
     let hide = 0;
     let currDisplayIndex = 0;
     const maxValidMoveIndex = desiredMoveList.length - 1;
+    const $carouselNote = $("<p>").css('font-weight','bold');
+    $carouselNote.text(`${currDisplayIndex + 1} of ${maxValidMoveIndex + 1}`);
     //creates carousel container
     const $moveCarousel = $("<div>").addClass("move-carousel");
     $moveCarousel.css({'display':'flex','justify-content':'space-between'});
@@ -137,6 +144,7 @@ const makeCarousel = () => {
             currDisplayIndex--;
         }
         $moveDivList.children().eq(currDisplayIndex).css('display','flex');
+        $carouselNote.text(`${currDisplayIndex + 1} of ${maxValidMoveIndex + 1}`);
     });
     //button to see the previous valid move
     const $nextBtn = $("<button>").text(">").addClass('carousel-btn');
@@ -152,6 +160,7 @@ const makeCarousel = () => {
             currDisplayIndex++;
         }
         $moveDivList.children().eq(currDisplayIndex).css('display','flex');
+        $carouselNote.text(`${currDisplayIndex + 1} of ${maxValidMoveIndex + 1}`);
     })
     //div to hold all moves in carousel
     const $moveDisplay = $("<div>").addClass("move-display");
@@ -191,6 +200,7 @@ const makeCarousel = () => {
     $moveCarousel.append($nextBtn);
     //carousel displayed to screen
     $("#desired-move-container").append($moveCarousel);
+    $("#desired-move-container").append($carouselNote);
 }
 
 $( () => {
@@ -258,7 +268,7 @@ $( () => {
             }).then(
                 (data) => {
                     for (const dataPoint of data) {
-                        console.log(dataPoint);
+                        // console.log(dataPoint);
                         const firstActiveFrame = calcFirstActiveFrame(dataPoint.HitboxActive);
                         // console.log("First Active Frame:", firstActiveFrame);
                         const totalActiveFrames = calcTotalActiveFrames(dataPoint.HitboxActive, dataPoint.FirstActionableFrame);
