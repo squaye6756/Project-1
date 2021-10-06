@@ -20,12 +20,14 @@ const noInfo = ['Kazuya','Byleth','Alex','Steve','Dark Samus','Isabelle'];
 
 const desiredMoveList = [];
 
+//creates dropdown menu options
 const fillOptions = () => { //HTML & CSS by Jon Duckett
     for (const char of validCharArr) {
         $("#character").append($("<option>").text(char));
     }
 }
 
+//strips symbols from dropdown menu options to make them valid in url
 const stripSymbols = (word) => {
     while (word.includes(".")) {
         word = word.replace(".","");
@@ -36,17 +38,21 @@ const stripSymbols = (word) => {
     return word;
 }
 
+//function to calculate the first active frame for a move
 const calcFirstActiveFrame = (activeFramesStr) => {
+    //tests if data pulled (activeFramesStr) is in digit-digit format
     const regexDigitDashDigit = /\d-\d/;
     let regexTest = new RegExp(regexDigitDashDigit).test(activeFramesStr);
     if (regexTest) {
         return parseInt(activeFramesStr.split("-")[0]);
     }
+    //tests if data pulled (activeFramesStr) is in digit- format
     const regexDigitDash = /\d-/;
     regexTest = new RegExp(regexDigitDash).test(activeFramesStr);
     if (regexTest) {
         return parseInt(activeFramesStr.split("-")[0]);
     }
+    //tests if data pulled (activeFramesStr) is in digit format
     const regexDigit = /\d/;
     regexTest = new RegExp(regexDigit).test(activeFramesStr);
     if (regexTest) {
@@ -57,8 +63,12 @@ const calcFirstActiveFrame = (activeFramesStr) => {
     // console.log(regexTest);
     return "N/A";
 }
+//https://www.w3schools.com/jsref/jsref_regexp_test.asp
+//https://www.w3schools.com/jsref/jsref_obj_regexp.asp
 
+//function to calculate the total amount of active frames for a move
 const calcTotalActiveFrames = (activeFramesStr, earliestActionFrame) => {
+    //tests if data pulled (activeFramesStr) is in digit-digit format
     const regexDigitDashDigit = /\d-\d/;
     regexTest = new RegExp(regexDigitDashDigit).test(activeFramesStr);
     if (regexTest) {
@@ -66,14 +76,17 @@ const calcTotalActiveFrames = (activeFramesStr, earliestActionFrame) => {
         const lastFrame = activeFramesStr.split("-")[1];
         return parseInt(lastFrame) - parseInt(firstFrame) + 1;
     }
+    //tests if data pulled (earliestActionFrame) has no value
     if (earliestActionFrame === "-") {
         return "N/A";
     }
+    //tests if data pulled (activeFramesStr) is in digit- format
     const regexDigitDash = /\d-/;
     regexTest = new RegExp(regexDigitDash).test(activeFramesStr);
     if (regexTest) {
         return parseInt(earliestActionFrame) - parseInt(activeFramesStr.split("-")[0]);
     }
+    //tests if data pulled (activeFramesStr) is in digit format
     const regexDigit = /\d/;
     regexTest = new RegExp(regexDigit).test(activeFramesStr);
     if (regexTest) {
@@ -82,10 +95,13 @@ const calcTotalActiveFrames = (activeFramesStr, earliestActionFrame) => {
     return "N/A";
 }
 
+//function to calculate the endlag for a move
 const calcEndlag = (activeFramesStr, earliestActionFrame) => {
+    //tests if data pulled (activeFramesStr, earliestActionFrame) has no value
     if (activeFramesStr == null || earliestActionFrame === "-") {
         return "N/A";
     }
+    //tests if data pulled (activeFramesStr) is in digit-digit format
     const regexDigitDashDigit = /\d-\d/;
     regexTest = new RegExp(regexDigitDashDigit).test(activeFramesStr);
     if (regexTest) {
@@ -93,11 +109,13 @@ const calcEndlag = (activeFramesStr, earliestActionFrame) => {
         const lastFrame = activeFramesStr.split("-")[1];
         return parseInt(earliestActionFrame) - parseInt(lastFrame);
     }
+    //tests if data pulled (activeFramesStr) is in digit- format
     const regexDigitDash = /\d-/;
     regexTest = new RegExp(regexDigitDash).test(activeFramesStr);
     if (regexTest) {
         return "N/A";
     }
+    //tests if data pulled (activeFramesStr) is in digit format
     const regexDigit = /\d/;
     regexTest = new RegExp(regexDigit).test(activeFramesStr);
     if (regexTest) {
@@ -106,6 +124,7 @@ const calcEndlag = (activeFramesStr, earliestActionFrame) => {
     return "N/A";
 }
 
+//adds image of the character searched for
 const addImage = (name) => {
     //removes previous display
     $("#desired-move-container").empty();
@@ -121,9 +140,13 @@ const makeCarousel = () => {
         $("#desired-move-container").append($("<h2>").text("No Matches of Search"));
         return;
     }
+    //num used for truthy-falsy evalution to hide/display a carousel item
     let hide = 0;
+    //index for each item in the carousel
     let currDisplayIndex = 0;
+    //max index value in the carousel
     const maxValidMoveIndex = desiredMoveList.length - 1;
+    //shows user results of their search and where they are in the search
     const $carouselNote = $("<p>").css('font-weight','bold');
     $carouselNote.text(`${currDisplayIndex + 1} of ${maxValidMoveIndex + 1}`);
     //creates carousel container
@@ -204,25 +227,26 @@ const makeCarousel = () => {
 }
 
 $( () => {
+    //invokes function to create dropdown menu options
     fillOptions();
-    $("form").on("submit", (event) => {
+    $("form").on("submit", (event) => { //once form submission happens
         event.preventDefault();
 
-        // console.log($("#character").val());
-        // console.log($("#init-active-frame").val());
-        // console.log($("#total-active-frames").val());
-        // console.log($("#endlag").val());
+        //retrieve values from each input field
         const charSelected = $("#character").val();
         let initActiveFrameDesired = $("#init-active-frame").val();
         let totalActiveFramesDesired = $("#total-active-frames").val();
         let endlagDesired = $("#endlag").val();
 
+        /*booleans to determine whether an input should be considered during the
+        search*/
         const searchInitFrame = initActiveFrameDesired === "" ? false : true;
         const searchActiveFrames = totalActiveFramesDesired === "" ? false : true;
         const searchEndlag = endlagDesired === "" ? false : true;
 
+        //detects if user has tried to search using invalid input
         let invalidInput = false;
-
+        //checks if input field "Initial Active Frame" has invalid input
         if (searchInitFrame) {
             let lengthOfStr = initActiveFrameDesired.length;
             let lengthOfNum = parseInt(initActiveFrameDesired).toString().length;
@@ -231,7 +255,7 @@ $( () => {
                 invalidInput = true;
             }
         }
-
+        //checks if input field "Total Active Frames" has invalid input
         if (searchActiveFrames) {
             lengthOfStr = totalActiveFramesDesired.length;
             lengthOfNum = parseInt(totalActiveFramesDesired).toString().length;
@@ -240,7 +264,7 @@ $( () => {
                 invalidInput = true;
             }
         }
-
+        //checks if input field "Endlag" has invalid input
         if (searchEndlag) {
             lengthOfStr = endlagDesired.length;
             lengthOfNum = parseInt(endlagDesired).toString().length;
@@ -250,44 +274,54 @@ $( () => {
             }
         }
 
-        if (!invalidInput) {
+        if (!invalidInput) { //ajax pull only happens if no invalid input
             let char = charSelected;
+            //handles an exception for url link
             if (!(charSelected === "Min Min")) {
+                //stips character name of spaces for url link
                 char = charSelected.split(" ").join("");
             }
 
-            // console.log(char);
+            //invokes function to strip character of symbols for url link
             char = stripSymbols(char);
-            // console.log(char);
 
             // let ajaxLink = `https://api.kuroganehammer.com/api/characters/name/${char}/moves?game=ultimate`;
+
+            //link passed changes based on character selected
             let ajaxLinkTwo = `https://api.kuroganehammer.com/api/characters/name/${char}/moves/`;
 
             $.ajax({
                 url: ajaxLinkTwo
             }).then(
                 (data) => {
+                    //loops over all moves the character has
                     for (const dataPoint of data) {
-                        // console.log(dataPoint);
+                        //invokes function to calculate first active frame of move
                         const firstActiveFrame = calcFirstActiveFrame(dataPoint.HitboxActive);
-                        // console.log("First Active Frame:", firstActiveFrame);
+                        //invokes function to calculate total active frames of move
                         const totalActiveFrames = calcTotalActiveFrames(dataPoint.HitboxActive, dataPoint.FirstActionableFrame);
-                        // console.log("Total Active Frames:", totalActiveFrames);
+                        //invokes function to calculate endlag of move
                         const endlag = calcEndlag(dataPoint.HitboxActive, dataPoint.FirstActionableFrame);
-                        // console.log("EndLag:", endlag);
 
+                        //determines if move fits user's search criteria
+                        /*compares move's initial active frame with user input
+                        (valid if equal or less) if it must be considered*/
                         let validByInitFrame = true;
                         if (searchInitFrame) {
                             if (!(firstActiveFrame <= initActiveFrameDesired)) {
                                 validByInitFrame = false;
                             }
                         }
+                        /*compares move's total active frames with user input
+                        (valid if equal or more) if it must be considered*/
                         let validByActiveFrames = true;
                         if (searchActiveFrames) {
                             if (!(totalActiveFrames >= totalActiveFramesDesired)) {
                                 validByActiveFrames = false;
                             }
                         }
+                        /*compares move's endlag with user input
+                        (valid if equal or less) if it must be considered*/
                         let validByEndlag = true;
                         if (searchEndlag) {
                             if (!(endlag <= endlagDesired)) {
@@ -295,20 +329,26 @@ $( () => {
                             }
                         }
 
+                        //checks if move is valid by all criteria
                         if (validByEndlag && validByInitFrame && validByActiveFrames) {
-                            if (!(dataPoint.Name).includes("throw")) {
+                            if (!(dataPoint.Name).includes("throw")) {//throws are discarded
+                                //creates object holding relevant data of move
                                 const desiredMove = {
                                     name: dataPoint.Name,
                                     initActFrame: firstActiveFrame,
                                     totalActFrames: totalActiveFrames,
                                     endingLag: endlag
                                 }
+                                //adds valid move to array
                                 desiredMoveList.push(desiredMove);
                             }
                         }
                     }
+                    //invokes function to add the character's photo to the page
                     addImage(char);
+                    //invokes function to add list of valid moves to page via a carousel
                     makeCarousel();
+                    //empties the array holding valid moves to prep for next search
                     desiredMoveList.splice(0, desiredMoveList.length);
                 },
                 () => {
