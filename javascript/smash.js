@@ -12,7 +12,7 @@ const validCharArr = [
     'Cloud','Corrin','Bayonetta','Inkling','Ridley','Simon','Richter',
     'King K. Rool','Incineroar','Piranha Plant','Joker','Hero',
     'Banjo Kazooie','Terry',/*'Byleth',*/'Min Min',/*'Steve','Alex',*/'Sephiroth',
-    'Pyra','Mythra'/*,'Kazuya'*/
+    'Pyra','Mythra'/*,'Kazuya'*/,'Captain Falcon'
 ]
 
 //list of invalid characters in ajax link
